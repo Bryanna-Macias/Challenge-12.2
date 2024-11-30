@@ -1,36 +1,45 @@
 import React, { useState } from 'react';
 
-const Contact = () => {
+function Contact() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({ name: '', email: '', message: '' });
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    setErrors({ ...errors, [name]: '' });
   };
 
-  const validateEmail = (email) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(String(email).toLowerCase());
+  const validateForm = () => {
+    let formIsValid = true;
+    let errors = {};
+
+    if (!formData.name) {
+      errors.name = 'Name is required';
+      formIsValid = false;
+    }
+
+    if (!formData.email) {
+      errors.email = 'Email is required';
+      formIsValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = 'Email is invalid';
+      formIsValid = false;
+    }
+
+    if (!formData.message) {
+      errors.message = 'Message is required';
+      formIsValid = false;
+    }
+
+    setErrors(errors);
+    return formIsValid;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newErrors = {};
-
-    if (!formData.name) newErrors.name = 'Name is required.';
-    if (!formData.email) {
-      newErrors.email = 'Email is required.';
-    } else if (!validateEmail(formData.email)) {
-      newErrors.email = 'Email is not valid.';
-    }
-    if (!formData.message) newErrors.message = 'Message is required.';
-
-    if (Object.keys(newErrors).length === 0) {
-      // Submit form
-      console.log(formData);
-      setFormData({ name: '', email: '', message: '' });
-    } else {
-      setErrors(newErrors);
+    if (validateForm()) {
+      // Process form (e.g., send data to backend)
     }
   };
 
@@ -38,25 +47,25 @@ const Contact = () => {
     <section>
       <h2>Contact</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Name</label>
-          <input type="text" name="name" value={formData.name} onChange={handleChange} />
-          {errors.name && <p>{errors.name}</p>}
-        </div>
-        <div>
-          <label>Email</label>
-          <input type="email" name="email" value={formData.email} onChange={handleChange} />
-          {errors.email && <p>{errors.email}</p>}
-        </div>
-        <div>
-          <label>Message</label>
-          <textarea name="message" value={formData.message} onChange={handleChange}></textarea>
-          {errors.message && <p>{errors.message}</p>}
-        </div>
+        <label>
+          Name:
+          <input type="text" name="name" value={formData.name} onChange={handleInputChange} />
+          {errors.name && <span className="error">{errors.name}</span>}
+        </label>
+        <label>
+          Email:
+          <input type="email" name="email" value={formData.email} onChange={handleInputChange} />
+          {errors.email && <span className="error">{errors.email}</span>}
+        </label>
+        <label>
+          Message:
+          <textarea name="message" value={formData.message} onChange={handleInputChange} />
+          {errors.message && <span className="error">{errors.message}</span>}
+        </label>
         <button type="submit">Send</button>
       </form>
     </section>
   );
-};
+}
 
 export default Contact;

@@ -1,27 +1,29 @@
 import React from 'react';
 
-const Portfolio = () => {
+function Portfolio() {
   const projects = [
-    { title: 'Project 1', img: 'img1-url.jpg', link: 'deployed-url-1', repo: 'github-url-1' },
-    { title: 'Project 2', img: 'img2-url.jpg', link: 'deployed-url-2', repo: 'github-url-2' },
-    // Add more projects as needed
+    { title: 'Project 1', link: 'https://example.com', github: 'https://github.com/example1' },
+    // Add more projects here
   ];
 
   return (
     <section>
       <h2>Portfolio</h2>
-      <div>
+      <div className="projects">
         {projects.map((project, index) => (
-          <div key={index}>
+          <div key={index} className="project">
             <h3>{project.title}</h3>
-            <img src={project.img} alt={project.title} />
-            <a href={project.link} target="_blank" rel="noopener noreferrer">View Live</a>
-            <a href={project.repo} target="_blank" rel="noopener noreferrer">View Code</a>
+            <a href={project.link} target="_blank" rel="noopener noreferrer">
+              <img src={`path_to_image${index + 1}.jpg`} alt={project.title} />
+            </a>
+            <a href={project.github} target="_blank" rel="noopener noreferrer">
+              GitHub
+            </a>
           </div>
         ))}
       </div>
     </section>
   );
-};
+}
 
 export default Portfolio;
